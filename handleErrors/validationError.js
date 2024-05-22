@@ -6,4 +6,4 @@ class ValidationError extends BaseError {
   }
 }
 
-module.exports = { ValidationError };
+module.exports =  ValidationError;
