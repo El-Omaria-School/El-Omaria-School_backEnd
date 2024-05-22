@@ -24,8 +24,9 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    enum: ["Admin", "Student"],
     required: [true, "Role is required"],
-    default: "user",
+    default: "Student",
   },
   password: {
     type: String,
@@ -38,6 +39,7 @@ const userSchema = new mongoose.Schema({
   city: {
     type: String,
   },
+  verified: { type: Boolean, default: false },
 });
 
 const User = mongoose.model("User", userSchema);

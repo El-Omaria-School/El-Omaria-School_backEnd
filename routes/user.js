@@ -7,16 +7,36 @@ const userRouter = (userController) => {
   router.post(
     "/",
     handleAsync(async (req, res) => {
-      const newUser = await userController.createNewUser(req.body);
-      res.status(201).json({ success: true, message: newUser });
+      const user = await userController.createNewUser(req.body);
+      res
+        .status(201)
+        .json({ message: "User registered. Please verify your email.", user });
     })
   );
 
   router.post(
-    "/login",
+    "/login/password",
     handleAsync(async (req, res) => {
-      const logged = await userController.login(req.body);
-      res.status(200).json({ success: true, token: logged });
+      const token = await userController.loginWithPassword(req.body);
+      res.status(200).json({ success: true, token: token });
+    })
+  );
+
+  router.post(
+    "/login/otp",
+    handleAsync(async (req, res) => {
+      await userController.sendOtpForLogin(req.body.email);
+      res
+        .status(200)
+        .json({ success: true, message: "OTP sent to your email" });
+    })
+  );
+
+  router.post(
+    "/login/otp/verify",
+    handleAsync(async (req, res) => {
+      const token = await userController.verifyOtpAndLogin(req.body);
+      res.status(200).json({ success: true, token: token });
     })
   );
   router.get(
