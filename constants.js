@@ -1,6 +1,6 @@
 const PORT = process.env.PORT || 3000;
 const DB_URL = process.env.API_URL;
-const JWT_SECRET = "myjwtsecret";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 module.exports = {
   PORT,
