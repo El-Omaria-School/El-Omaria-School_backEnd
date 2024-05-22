@@ -1,11 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { validatUsers, validatUpdateUser } = require("../validators/User");
+const { validatUsers } = require("../validators/User");
 
 const { JWT_SECRET } = require("../constants");
 const { BadRequestError } = require("../Errors/BadRequestError");
 const { ValidationError } = require("../Errors/ValidationError");
-const bycrypt = require("bcrypt");
 
 class UserController {
   constructor(userRepository) {
