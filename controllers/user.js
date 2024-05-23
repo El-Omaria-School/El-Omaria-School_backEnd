@@ -6,7 +6,7 @@ const { JWT_SECRET } = require("../constants");
 const BadRequestError = require("../handleErrors/badRequestError");
 const ValidationError = require("../handleErrors/validationError");
 const crypto = require("crypto");
-const User = require("../models/user");
+const User = require("../models/User");
 
 class UserController {
   constructor(userRepository) {
