@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const { notFoundError } = require("../handleErrors/notFoundError");
-const User = require("../models/User");
+const User = require("../models/user");
 
 class UserRepository {
   async createNewUser(body) {
