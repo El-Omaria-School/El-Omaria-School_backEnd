@@ -7,7 +7,7 @@ const phonePattern =
 const userSchema = joi.object({
   name: joi.string().min(3).max(20).required(),
   email: joi.string().regex(EmailPattern).required(),
-  phoneNumber: joi.string().regex(phonePattern).min(11).max(11),
+  phoneNumber: joi.string().regex(phonePattern).min(11).max(13),
   password: joi.string().min(8).required(),
   role: joi.string(),
   gender: joi.string(),
