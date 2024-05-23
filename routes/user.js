@@ -1,5 +1,6 @@
 const express = require("express");
 const { handleAsync } = require("../handleErrors/handleAsync");
+const { auth } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -69,6 +70,18 @@ const userRouter = (userController) => {
     handleAsync(async (req, res) => {
       const allUser = await userController.getAllUser();
       res.status(200).json({ success: true, data: allUser });
+    })
+  );
+
+  router.patch(
+    "/",
+    auth,
+    handleAsync(async (req, res) => {
+      const updated = await userController.UpdateUserProfile(
+        req.auth,
+        req.body
+      );
+      res.status(200).json({ success: true, message: updated });
     })
   );
 
