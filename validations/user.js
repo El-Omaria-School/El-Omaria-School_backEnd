@@ -9,8 +9,10 @@ const userSchema = joi.object({
   email: joi.string().regex(EmailPattern).required(),
   phoneNumber: joi.string().regex(phonePattern).min(11).max(11),
   password: joi.string().min(8).required(),
-  address: joi.string(),
   role: joi.string(),
+  gender: joi.string(),
+  country: joi.string(),
+  city: joi.string(),
 });
 
 const validatUsers = (user) => userSchema.validate(user);

@@ -1,9 +1,9 @@
 const BaseError = require("./baseError");
 
-class ValidationError extends BaseError {
+class validationError extends BaseError {
   constructor(message) {
     super(422, message);
   }
 }
 
-module.exports =  ValidationError;
+module.exports = validationError;
