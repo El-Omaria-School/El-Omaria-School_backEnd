@@ -6,7 +6,6 @@ const { JWT_SECRET } = require("../constants");
 const BadRequestError = require("../handleErrors/badRequestError");
 const ValidationError = require("../handleErrors/validationError");
 const crypto = require("crypto");
-const User = require("../models/User");
 
 class UserController {
   constructor(userRepository) {
@@ -88,7 +87,7 @@ class UserController {
 
       if (storedOtp === otp) {
         delete this.otpStore[email];
-        await User.updateOne({ email }, { verified: true });
+        await this.userRepository.update(email);
         const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1d" });
         return token;
       }
@@ -147,7 +146,7 @@ class UserController {
       throw new BadRequestError("Email and password are required.");
     }
     const newPass = await bcrypt.hash(newPassword, 10);
-    await User.updateOne({ email }, { password: newPass });
+    await this.userRepository.savePass(email, newPass);
   }
 
   async UpdateUserProfile(auth, body) {
