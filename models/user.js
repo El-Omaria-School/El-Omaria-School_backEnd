@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
     match: [/^\d{11}$/, "Phone number must be 11 digits"],
+    required: [true, "you must enter an phone number!"],
   },
   role: {
     type: String,
