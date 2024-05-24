@@ -1,11 +1,10 @@
 const bcrypt = require("bcrypt");
 const { notFoundError } = require("../handleErrors/notFoundError");
-const User = require("../models/user");
+const User = require("../models/User");
 
 class UserRepository {
   async createNewUser(body) {
-    const passwordHash = await bcrypt.hash(body.password, 10);
-    await User.create({ ...body, password: passwordHash });
+    await User.create({ ...body });
     return "User created successfull";
   }
 
@@ -18,6 +17,14 @@ class UserRepository {
     const users = await User.find();
     if (!users) throw new notFoundError("No users found!");
     return users;
+  }
+  async updateProfile(email, body) {
+    const user = await User.find({ email });
+    if (!user) throw new notFoundError("User not found");
+
+    const updated = await User.updateOne({ email }, body);
+
+    return updated;
   }
 }
 

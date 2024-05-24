@@ -6,7 +6,7 @@ const { JWT_SECRET } = require("../constants");
 const BadRequestError = require("../handleErrors/badRequestError");
 const ValidationError = require("../handleErrors/validationError");
 const crypto = require("crypto");
-const User = require("../models/user");
+const User = require("../models/User");
 
 class UserController {
   constructor(userRepository) {
@@ -65,7 +65,6 @@ class UserController {
     try {
       await this.sendOTPEmail(email, otp);
     } catch (error) {
-      console.log(error);
       throw new Error("Error sending OTP");
     }
 
@@ -114,7 +113,6 @@ class UserController {
         "Email not verified. Please verify your email first."
       );
     }
-
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       throw new BadRequestError("Incorrect email or password.");
@@ -148,12 +146,22 @@ class UserController {
     if (!email || !newPassword) {
       throw new BadRequestError("Email and password are required.");
     }
-    // const user = await User.findOne({ email });
-    // const secret = JWT_SECRET + user.password;
-    // jwt.verify(req.params.token, secret);
-    // await this.verifyOtp({ email, otp });
     const newPass = await bcrypt.hash(newPassword, 10);
     await User.updateOne({ email }, { password: newPass });
+  }
+
+  async UpdateUserProfile(auth, body) {
+    const user = auth;
+    const bodyClone = structuredClone(body);
+
+    if (bodyClone.email) throw new BadRequestError(`can't change email!`);
+
+    if (bodyClone.password) {
+      const encryptedPassword = await bcrypt.hash(bodyClone.password, 10);
+      bodyClone.password = encryptedPassword;
+    }
+
+    return await this.userRepository.updateProfile(user.email, bodyClone);
   }
 
   async getAllUser() {
