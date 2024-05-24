@@ -11,7 +11,7 @@ const userRouter = (userController) => {
     handleAsync(async (req, res) => {
       const user = await userController.createNewUser(req.body);
       res
-        .status(201)
+        .status(200)
         .json({ message: "User registered. Please verify your email.", user });
     })
   );

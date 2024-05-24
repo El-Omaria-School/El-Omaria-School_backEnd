@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "you must enter a First Name!"],
+    match: [/^[a-zA-Z'-]+$/, "Please enter a valid name!"],
   },
   email: {
     type: String,
@@ -20,7 +21,6 @@ const userSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    match: [/^\d{11}$/, "Phone number must be 11 digits"],
     required: [true, "you must enter an phone number!"],
   },
   role: {

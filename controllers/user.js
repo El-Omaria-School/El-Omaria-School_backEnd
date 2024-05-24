@@ -6,6 +6,7 @@ const { JWT_SECRET } = require("../constants");
 const BadRequestError = require("../handleErrors/badRequestError");
 const ValidationError = require("../handleErrors/validationError");
 const crypto = require("crypto");
+const AuthError = require("../handleErrors/authError");
 
 class UserController {
   constructor(userRepository) {
@@ -87,9 +88,11 @@ class UserController {
 
       if (storedOtp === otp) {
         delete this.otpStore[email];
-        await this.userRepository.update(email);
-        const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1d" });
-        return token;
+        await this.userRepository.update(email, { verified: true });
+        const token = jwt.sign({ email, type: "otp" }, JWT_SECRET, {
+          expiresIn: "15m",
+        }); // Shorter expiry
+        return { token, message: "Email verified successfully" };
       }
     }
     throw new BadRequestError("Invalid OTP");
@@ -108,7 +111,7 @@ class UserController {
     }
 
     if (!user.verified) {
-      throw new BadRequestError(
+      throw new AuthError(
         "Email not verified. Please verify your email first."
       );
     }
@@ -117,8 +120,10 @@ class UserController {
       throw new BadRequestError("Incorrect email or password.");
     }
 
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1d" });
-    return token;
+    const token = jwt.sign({ email, type: "auth" }, JWT_SECRET, {
+      expiresIn: "1d",
+    }); // Longer expiry
+    return { token, message: "Login successful" };
   }
 
   async resendOtp(email) {
