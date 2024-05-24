@@ -26,6 +26,15 @@ class UserRepository {
 
     return updated;
   }
+  async update(email) {
+    const user = await User.updateOne({ email }, { verified: true });
+
+    return user;
+  }
+  async savePass(email, newPass) {
+    const user = await User.updateOne({ email }, { password: newPass });
+    return user;
+  }
 }
 
 module.exports = UserRepository;
