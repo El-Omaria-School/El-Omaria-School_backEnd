@@ -48,8 +48,19 @@ class UserController {
 
     const { email, password } = body;
     const existingUser = await this.userRepository.findUserByEmail(email);
-    if (existingUser) {
+
+    if (existingUser && existingUser.verified) {
       throw new BadRequestError("This email already exists.");
+    }
+
+    if (existingUser && !existingUser.verified) {
+      const otp = this.generateOTP();
+      const expiry = Date.now() + 5 * 60 * 1000;
+      this.otpStore[email] = { otp, expiry };
+
+      await this.sendOTPEmail(email, otp);
+
+      throw new AuthError("Email not verified.");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -111,10 +122,15 @@ class UserController {
     }
 
     if (!user.verified) {
-      throw new AuthError(
-        "Email not verified. Please verify your email first."
-      );
+      const otp = this.generateOTP();
+      const expiry = Date.now() + 5 * 60 * 1000;
+      this.otpStore[email] = { otp, expiry };
+
+      await this.sendOTPEmail(email, otp);
+
+      throw new AuthError("Email not verified.");
     }
+
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       throw new BadRequestError("Incorrect email or password.");
