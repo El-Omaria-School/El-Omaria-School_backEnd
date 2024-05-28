@@ -16,7 +16,7 @@ const admin = async (req, res, next) => {
 
     const user = await User.findOne({ email });
 
-    if (user.role !== "admin") {
+    if (user.role !== "Admin") {
       return res.status(401).send({ message: "permission denied" });
     }
 
