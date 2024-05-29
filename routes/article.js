@@ -1,5 +1,6 @@
 const express = require("express");
 const { handleAsync } = require("../handleErrors/handleAsync");
+const { admin } = require("../middleware/admin");
 const router = express.Router();
 
 const articleRouter = (articleController) => {
@@ -15,7 +16,7 @@ const articleRouter = (articleController) => {
     "/",
     // uploadSingle,
     // uploadImage,
-    // admin,
+    admin,
     handleAsync(async (req, res) => {
       const newArticle = await articleController.createArticle(req.body);
       res.status(201).json({ success: true, data: newArticle });
@@ -26,7 +27,7 @@ const articleRouter = (articleController) => {
     "/:id",
     // uploadSingle,
     // uploadImage,
-    // admin,
+    admin,
     handleAsync(async (req, res) => {
       await articleController.updateArticle(req.params.id, req.body);
       res
@@ -36,7 +37,7 @@ const articleRouter = (articleController) => {
   );
   router.delete(
     "/:id",
-    // admin,
+    admin,
     handleAsync(async (req, res) => {
       await articleController.deleteArticleById(req.params.id);
       res
