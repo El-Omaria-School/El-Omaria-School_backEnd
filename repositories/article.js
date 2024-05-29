@@ -21,16 +21,16 @@ class ArticleRepository {
     //   await deleteImages(Article.images);
     // }
 
-    const updated = await Author.updateOne({ _id: id }, body);
+    const updated = await article.updateOne({ _id: id }, body);
 
     return updated;
   }
 
-  async deleteAuthorById(id) {
+  async deleteArticleById(id) {
     const Article = await article.findById(id);
     if (!Article) throw new NotFoundError("Article not Found!");
     // await deleteImages(Article.images);
-    // const deleted = await Article.findByIdAndDelete(id);
+    const deleted = await article.findByIdAndDelete(id);
 
     return deleted;
   }

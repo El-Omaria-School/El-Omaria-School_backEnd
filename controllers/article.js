@@ -23,7 +23,7 @@ class ArticleController {
   }
 
   async deleteArticleById(id) {
-    return await this.articleRepository.deleteAuthorById(id);
+    return await this.articleRepository.deleteArticleById(id);
   }
 }
 module.exports = ArticleController;
