@@ -1,4 +1,5 @@
 const NotFoundError = require("../handleErrors/notFoundError");
+const { deleteImages } = require("../middleware/firebase");
 const article = require("../models/Article");
 
 class ArticleRepository {
@@ -17,9 +18,9 @@ class ArticleRepository {
   async updateArticle(id, body) {
     const Article = await article.findById(id);
     if (!Article) throw new NotFoundError("Article not Found!");
-    // if (body.images) {
-    //   await deleteImages(Article.images);
-    // }
+    if (body.images) {
+      await deleteImages(Article.images);
+    }
 
     const updated = await article.updateOne({ _id: id }, body);
 
@@ -29,7 +30,7 @@ class ArticleRepository {
   async deleteArticleById(id) {
     const Article = await article.findById(id);
     if (!Article) throw new NotFoundError("Article not Found!");
-    // await deleteImages(Article.images);
+    await deleteImages(Article.images);
     const deleted = await article.findByIdAndDelete(id);
 
     return deleted;
