@@ -1,5 +1,5 @@
 const express = require("express");
-const { uploadMultiple } = require("./Multer");
+const { uploadSingle } = require("./Multer");
 const {
   getStorage,
   ref,
@@ -14,41 +14,35 @@ const app = express();
 
 const uploadImage = async (req, res, next) => {
   try {
-    if (!req.files || req.files.length === 0) {
+    if (!req.file) {
       return next();
     }
 
     const storageFB = getStorage();
-    const files = req.files.map((file) => ({
-      mimetype: file.mimetype,
-      buffer: file.buffer,
-    }));
+    const file = {
+      mimetype: req.file.mimetype,
+      buffer: req.file.buffer,
+    };
 
-    // Sign in to Firebase
     await signInWithEmailAndPassword(
       auth,
       process.env.FIREBASE_USER,
       process.env.FIREBASE_AUTH
     );
 
-    // Log successful authentication
+    const dateTime = Date.now();
+    const fileName = `images/${dateTime}-${Math.random()
+      .toString(36)
+      .substring(7)}`;
+    const storageRef = ref(storageFB, fileName);
+    const metadata = {
+      contentType: file.mimetype,
+    };
 
-    const uploadPromises = files.map(async (file) => {
-      const dateTime = Date.now();
-      const fileName = `images/${dateTime}-${Math.random()
-        .toString(36)
-        .substring(7)}`; // Adding a random string to ensure unique filenames
-      const storageRef = ref(storageFB, fileName);
-      const metadata = {
-        contentType: file.mimetype,
-      };
+    await uploadBytesResumable(storageRef, file.buffer, metadata);
+    const imageUrl = await getDownloadURL(storageRef);
 
-      await uploadBytesResumable(storageRef, file.buffer, metadata);
-      return await getDownloadURL(storageRef);
-    });
-
-    const imageUrls = await Promise.all(uploadPromises);
-    req.body.images = imageUrls;
+    req.body.image = imageUrl;
     next();
   } catch (err) {
     res.status(500).json({
@@ -66,8 +60,6 @@ const deleteImages = async (images) => {
       process.env.FIREBASE_USER,
       process.env.FIREBASE_AUTH
     );
-
-    // Log successful authentication
 
     await Promise.all(
       images.map(async (image) => {
@@ -88,7 +80,7 @@ const deleteImages = async (images) => {
   }
 };
 
-app.post("/upload", uploadMultiple, uploadImage);
+app.post("/upload", uploadSingle, uploadImage);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

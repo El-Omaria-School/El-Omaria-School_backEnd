@@ -9,11 +9,9 @@ const articleSchema = new mongoose.Schema({
     type: String,
     required: [true, "you must enter a First Name!"],
   },
-  images: [
-    {
-      type: String,
-    },
-  ],
+  image: {
+    type: String,
+  },
   dateCreated: {
     type: Date,
     default: Date.now,

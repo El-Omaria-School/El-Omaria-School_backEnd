@@ -1,7 +1,7 @@
 const express = require("express");
 const { handleAsync } = require("../handleErrors/handleAsync");
 const { admin } = require("../middleware/admin");
-const { uploadMultiple } = require("../middleware/Multer");
+const { uploadSingle } = require("../middleware/Multer");
 const { uploadImage } = require("../middleware/firebase");
 const router = express.Router();
 
@@ -16,7 +16,7 @@ const articleRouter = (articleController) => {
   );
   router.post(
     "/",
-    uploadMultiple,
+    uploadSingle,
     uploadImage,
     admin,
     handleAsync(async (req, res) => {
@@ -27,7 +27,7 @@ const articleRouter = (articleController) => {
 
   router.patch(
     "/:id",
-    uploadMultiple,
+    uploadSingle,
     uploadImage,
     admin,
     handleAsync(async (req, res) => {
