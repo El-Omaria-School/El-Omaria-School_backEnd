@@ -18,6 +18,7 @@ class UserRepository {
     if (!users) throw new notFoundError("No users found!");
     return users;
   }
+
   async updateProfile(email, body) {
     const user = await User.find({ email });
     if (!user) throw new notFoundError("User not found");
@@ -26,6 +27,7 @@ class UserRepository {
 
     return updated;
   }
+
   async update(email) {
     const user = await User.updateOne({ email }, { verified: true });
 
@@ -33,6 +35,10 @@ class UserRepository {
   }
   async savePass(email, newPass) {
     const user = await User.updateOne({ email }, { password: newPass });
+    return user;
+  }
+  async findUserByEmail(email) {
+    const user = await User.findOne({ email });
     return user;
   }
 }

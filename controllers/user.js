@@ -184,6 +184,11 @@ class UserController {
     return await this.userRepository.updateProfile(user.email, bodyClone);
   }
 
+  async getCurrentUserProfile(auth) {
+    const user = auth;
+    return await this.userRepository.findUserByEmail(user.email);
+  }
+
   async getAllUser() {
     return await this.userRepository.getAllUser();
   }
