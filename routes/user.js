@@ -1,6 +1,7 @@
 const express = require("express");
 const { handleAsync } = require("../handleErrors/handleAsync");
 const { auth } = require("../middleware/auth");
+const { admin } = require("../middleware/admin");
 
 const router = express.Router();
 
@@ -67,6 +68,7 @@ const userRouter = (userController) => {
 
   router.get(
     "/",
+    admin,
     handleAsync(async (req, res) => {
       const allUser = await userController.getAllUser();
       res.status(200).json({ success: true, data: allUser });
@@ -82,6 +84,15 @@ const userRouter = (userController) => {
         req.body
       );
       res.status(200).json({ success: true, message: updated });
+    })
+  );
+
+  router.get(
+    "/profile",
+    auth,
+    handleAsync(async (req, res) => {
+      const profile = await userController.getCurrentUserProfile(req.auth);
+      res.status(200).json({ success: true, data: profile });
     })
   );
 
