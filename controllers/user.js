@@ -189,8 +189,8 @@ class UserController {
     return await this.userRepository.findUserByEmail(user.email);
   }
 
-  async getAllUser(req) {
-    return await this.userRepository.getAllUser(req);
+  async getAllUser(skip, limit, email) {
+    return await this.userRepository.getAllUser(skip, limit, email);
   }
 
 }
