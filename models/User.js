@@ -40,6 +40,14 @@ const userSchema = new mongoose.Schema({
   city: {
     type: String,
   },
+  watchedLessons: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Lesson',
+  }],
+  tasksDone: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Task',
+  }],
   verified: { type: Boolean, default: false },
 });
 

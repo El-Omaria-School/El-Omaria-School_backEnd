@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const { notFoundError } = require("../handleErrors/notFoundError");
 const User = require("../models/User");
+const { options } = require("joi");
 
 class UserRepository {
   async createNewUser(body) {
@@ -13,8 +14,13 @@ class UserRepository {
     return user;
   }
 
-  async getAllUser() {
-    const users = await User.find();
+  async getAllUser(req) {
+    let users = null;
+    if(req.query.email){
+      users = await User.find({email: {$regex: req.query.email, $options: "i"}})
+    }else{
+      users = await User.find();
+    }
     if (!users) throw new notFoundError("No users found!");
     return users;
   }
@@ -33,12 +39,14 @@ class UserRepository {
 
     return user;
   }
+  
   async savePass(email, newPass) {
     const user = await User.updateOne({ email }, { password: newPass });
     return user;
   }
-  async findUserByEmail(email) {
-    const user = await User.findOne({ email });
+
+  async findUserById(id) {
+    const user = await User.findOne({ _id: id });
     return user;
   }
 }
