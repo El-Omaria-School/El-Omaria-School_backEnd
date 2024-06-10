@@ -7,7 +7,7 @@ const articleSchema = new mongoose.Schema({
   },
   body: {
     type: String,
-    required: [true, "you must enter a First Name!"],
+    required: [true, "you must enter article body!"],
   },
   image: {
     type: String,

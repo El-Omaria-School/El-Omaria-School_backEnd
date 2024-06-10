@@ -189,9 +189,10 @@ class UserController {
     return await this.userRepository.findUserByEmail(user.email);
   }
 
-  async getAllUser() {
-    return await this.userRepository.getAllUser();
+  async getAllUser(req) {
+    return await this.userRepository.getAllUser(req);
   }
+
 }
 
 module.exports = UserController;
