@@ -14,15 +14,18 @@ class UserRepository {
     return user;
   }
 
-  async getAllUser(req) {
+  async getAllUser(skip, limit, email) {
     let users = null;
-    if(req.query.email){
-      users = await User.find({email: {$regex: req.query.email, $options: "i"}})
+    let noOfDocuments = 0;
+    if(email){
+      noOfDocuments = await User.countDocuments({email: {$regex: email, $options: "i"}});
+      users = await User.find({email: {$regex: email, $options: "i"}}).skip(skip).limit(limit)
     }else{
-      users = await User.find();
+      noOfDocuments = await User.countDocuments();
+      users = await User.find().skip(skip).limit(limit);
     }
     if (!users) throw new notFoundError("No users found!");
-    return users;
+    return {noOfDocuments, users};
   }
 
   async updateProfile(email, body) {
