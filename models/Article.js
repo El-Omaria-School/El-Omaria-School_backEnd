@@ -14,8 +14,8 @@ const articleSchema = new mongoose.Schema({
     default: null,
   },
   dateCreated: {
-    type: Date,
-    default: Date.now,
+    type: String,
+    default: () => new Date().toLocaleString("en-US"),
   },
 });
 
