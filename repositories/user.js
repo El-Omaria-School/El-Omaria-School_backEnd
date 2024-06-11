@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const { notFoundError } = require("../handleErrors/notFoundError");
 const User = require("../models/User");
+const { options } = require("joi");
 
 class UserRepository {
   async createNewUser(body) {
@@ -13,10 +14,18 @@ class UserRepository {
     return user;
   }
 
-  async getAllUser() {
-    const users = await User.find();
+  async getAllUser(skip, limit, email) {
+    let users = null;
+    let noOfDocuments = 0;
+    if(email){
+      noOfDocuments = await User.countDocuments({email: {$regex: email, $options: "i"}});
+      users = await User.find({email: {$regex: email, $options: "i"}}).skip(skip).limit(limit)
+    }else{
+      noOfDocuments = await User.countDocuments();
+      users = await User.find().skip(skip).limit(limit);
+    }
     if (!users) throw new notFoundError("No users found!");
-    return users;
+    return {noOfDocuments, users};
   }
 
   async updateProfile(email, body) {
@@ -33,12 +42,14 @@ class UserRepository {
 
     return user;
   }
+  
   async savePass(email, newPass) {
     const user = await User.updateOne({ email }, { password: newPass });
     return user;
   }
-  async findUserByEmail(email) {
-    const user = await User.findOne({ email });
+
+  async findUserById(id) {
+    const user = await User.findOne({ _id: id });
     return user;
   }
 }

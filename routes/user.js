@@ -70,8 +70,30 @@ const userRouter = (userController) => {
     "/",
     admin,
     handleAsync(async (req, res) => {
-      const allUser = await userController.getAllUser();
-      res.status(200).json({ success: true, data: allUser });
+      const page = req.query.page * 1 || 1;
+      const limit = req.query.limit * 1 || 6;
+      const skip = (page - 1) * limit;
+      const endIndex = page * limit;
+      
+      let allUsers = await userController.getAllUser(skip, limit, req.query.email);
+      const { noOfDocuments } = allUsers;
+      
+      const pagination = {
+        currentPage: page,
+        limit,
+        numberPages: Math.ceil(noOfDocuments / limit),
+        noOfDocuments,
+      };
+
+      if (endIndex < noOfDocuments) {
+        pagination.nextPage = page + 1;
+      }
+
+      if (skip > 0) {
+        pagination.prevPage = page - 1;
+      }
+
+      res.status(200).json({ success: true, pagination, data: allUsers.users });
     })
   );
 
