@@ -177,6 +177,20 @@ class UserController {
     if (bodyClone.email) throw new BadRequestError(`can't change email!`);
 
     if (bodyClone.password) {
+      if (!bodyClone.oldPassword) {
+        throw new BadRequestError("Old password is required!");
+      }
+      const isValidOldPassword = await bcrypt.compare(
+        bodyClone.oldPassword,
+        user.password
+      );
+      if (!isValidOldPassword) {
+        throw new BadRequestError("Incorrect old password!");
+      }
+      if (bodyClone.oldPassword === bodyClone.password)
+        throw new BadRequestError(
+          "New password must be different from the old password!"
+        );
       const encryptedPassword = await bcrypt.hash(bodyClone.password, 10);
       bodyClone.password = encryptedPassword;
     }
@@ -192,7 +206,6 @@ class UserController {
   async getAllUser(skip, limit, email) {
     return await this.userRepository.getAllUser(skip, limit, email);
   }
-
 }
 
 module.exports = UserController;
