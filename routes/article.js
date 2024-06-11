@@ -9,9 +9,29 @@ const articleRouter = (articleController) => {
   router.get(
     "/",
     handleAsync(async (req, res) => {
-      const articles = await articleController.getAllArticles();
+      const page = req.query.page * 1 || 1;
+      const limit = req.query.limit * 1 || 6;
+      const skip = (page - 1) * limit;
+      const endIndex = page * limit;
+      
+      const {articles, noOfDocuments} = await articleController.getAllArticles(skip, limit);
+      
+      const pagination = {
+        currentPage: page,
+        limit,
+        numberPages: Math.ceil(noOfDocuments / limit),
+        noOfDocuments,
+      };
 
-      res.status(200).json({ success: true, data: articles });
+      if (endIndex < noOfDocuments) {
+        pagination.nextPage = page + 1;
+      }
+
+      if (skip > 0) {
+        pagination.prevPage = page - 1;
+      }
+      
+      res.status(200).json({ success: true, pagination, data: articles });
     })
   );
   router.post(
