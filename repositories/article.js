@@ -8,11 +8,11 @@ class ArticleRepository {
     return Article;
   }
 
-  async getAllArticles() {
-    const Article = await article.find();
-    if (!Article) throw new NotFoundError("Not found article!");
-
-    return Article.reverse();
+  async getAllArticles(skip, limit) {
+    const noOfDocuments = await article.countDocuments();
+    const articles = await article.find().sort({"dateCreated": -1}).skip(skip).limit(limit);
+    if (!articles) throw new NotFoundError("Not found article!");
+    return {articles, noOfDocuments};
   }
 
   async updateArticle(id, body) {

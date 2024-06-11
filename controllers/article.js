@@ -15,8 +15,8 @@ class ArticleController {
     return await this.articleRepository.createNewArticle(body);
   }
 
-  async getAllArticles() {
-    return await this.articleRepository.getAllArticles();
+  async getAllArticles(skip, limit) {
+    return await this.articleRepository.getAllArticles(skip, limit);
   }
   async updateArticle(id, body) {
     return await this.articleRepository.updateArticle(id, body);
