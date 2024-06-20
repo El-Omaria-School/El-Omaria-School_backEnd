@@ -13,9 +13,10 @@ const articleRouter = (articleController) => {
       const limit = req.query.limit * 1 || 6;
       const skip = (page - 1) * limit;
       const endIndex = page * limit;
-      
-      const {articles, noOfDocuments} = await articleController.getAllArticles(skip, limit);
-      
+
+      const { articles, noOfDocuments } =
+        await articleController.getAllArticles(skip, limit);
+
       const pagination = {
         currentPage: page,
         limit,
@@ -30,8 +31,16 @@ const articleRouter = (articleController) => {
       if (skip > 0) {
         pagination.prevPage = page - 1;
       }
-      
+
       res.status(200).json({ success: true, pagination, data: articles });
+    })
+  );
+  router.get(
+    "/newest",
+    handleAsync(async (req, res) => {
+      const articles = await articleController.getNewestArticle();
+
+      res.status(200).json({ success: true, data: articles });
     })
   );
   router.post(
