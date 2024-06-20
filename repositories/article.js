@@ -10,9 +10,13 @@ class ArticleRepository {
 
   async getAllArticles(skip, limit) {
     const noOfDocuments = await article.countDocuments();
-    const articles = await article.find().sort({"dateCreated": -1}).skip(skip).limit(limit);
+    const articles = await article
+      .find()
+      .sort({ dateCreated: -1 })
+      .skip(skip)
+      .limit(limit);
     if (!articles) throw new NotFoundError("Not found article!");
-    return {articles, noOfDocuments};
+    return { articles, noOfDocuments };
   }
 
   async updateArticle(id, body) {
@@ -25,6 +29,13 @@ class ArticleRepository {
     const updated = await article.updateOne({ _id: id }, body);
 
     return updated;
+  }
+
+  async getNewestArticle() {
+    const Article = await article.find();
+    if (!Article) throw new NotFoundError("Not found article!");
+
+    return Article.reverse().slice(0, 2);
   }
 
   async deleteArticleById(id) {

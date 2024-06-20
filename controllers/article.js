@@ -14,7 +14,9 @@ class ArticleController {
 
     return await this.articleRepository.createNewArticle(body);
   }
-
+  async getNewestArticle() {
+    return await this.articleRepository.getNewestArticle();
+  }
   async getAllArticles(skip, limit) {
     return await this.articleRepository.getAllArticles(skip, limit);
   }
