@@ -1,9 +1,10 @@
 const joi = require("joi");
 
 const taskSchema = joi.object({
-  name: joi.string().required(),
-  description: joi.string().required(),
-  lessonId: joi.string().required()
+  // name: joi.string().required(),
+  // description: joi.string().required(),
+  link: joi.string().required(),
+  lessonId: joi.string().required(),
 });
 
 const validateTask = (task) => taskSchema.validate(task);
