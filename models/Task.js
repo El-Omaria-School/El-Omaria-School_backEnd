@@ -1,19 +1,23 @@
 const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema({
-  name: {
+  // name: {
+  //   type: String,
+  //   required: [true, "you must enter Task name"],
+  // },
+  // description: {
+  //   type: String,
+  //   required: [true, "you must enter Task description"],
+  // },
+  link: {
     type: String,
-    required: [true, "you must enter Task name"],
-  },
-  description: {
-    type: String,
-    required: [true, "you must enter Task description"],
+    required: [true, "you must enter Task link"],
   },
   lessonId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Lesson',
-    required: [true, 'lesson id is required'],
-  }
+    ref: "Lesson",
+    required: [true, "lesson id is required"],
+  },
 });
 
 const Task = mongoose.model("Task", taskSchema);

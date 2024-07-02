@@ -7,12 +7,12 @@ const courseSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: [true, "you must enter course description"],
+    // required: [true, "you must enter course description"],
   },
   image: {
     type: String,
-    required: [true, "you must upload course image"],
-  }
+    // required: [true, "you must upload course image"],
+  },
 });
 
 const Course = mongoose.model("Course", courseSchema);

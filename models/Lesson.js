@@ -5,24 +5,28 @@ const lessonSchema = new mongoose.Schema({
     type: String,
     required: [true, "you must enter Lesson name"],
   },
-  lessonNumber:{
+  lessonNumber: {
     type: Number,
     required: [true, "you must enter Lesson number"],
-    unique: false
+    unique: false,
   },
   description: {
     type: String,
-    required: [true, "you must enter Lesson description"],
+    // required: [true, "you must enter Lesson description"],
   },
   courseId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course',
-    required: [true, 'course id is required'],
+    ref: "Course",
+    required: [true, "course id is required"],
   },
   videoUrl: {
     type: String,
     required: [true, "you must enter lesson url"],
-  }
+  },
+  materialUrl: {
+    type: String,
+    required: [true, "you must enter material url"],
+  },
 });
 
 const Lesson = mongoose.model("Lesson", lessonSchema);
