@@ -136,9 +136,8 @@ class UserController {
       throw new BadRequestError("Incorrect email or password.");
     }
 
-    const token = jwt.sign({ email, type: "auth" }, JWT_SECRET, {
-      expiresIn: "1d",
-    }); // Longer expiry
+    const token = jwt.sign({ email, type: "auth" }, JWT_SECRET);
+
     return { token, message: "Login successful" };
   }
 
@@ -157,7 +156,6 @@ class UserController {
     try {
       await this.sendOTPEmail(email, otp);
     } catch (error) {
-      console.log(error);
       throw new Error("Error sending OTP");
     }
   }

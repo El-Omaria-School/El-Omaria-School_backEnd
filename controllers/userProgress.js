@@ -28,12 +28,11 @@ class UserProgressController {
     let mailOptions = {
       from: process.env.USER_EMAIL,
       to: user.email,
-      subject: "New Lesson Opened 😃",
+      subject: "😃تم فتح درس جديد",
       html: `<div>
-        <h4 style='color: #749b8c'>Lesson ${lesson.name} opened</h4>
-        <p>Open Elomaria school appp to watch it</p>
+        <h4 style='color: #749b8c'>${lesson.name} تم فتح</h4>
+        <p>افتح تطبيق مدرسة العمرية لرؤية الدرس المفتوح</p>
         </div>`,
-      // <a href=${lesson.videoUrl}>Watch it now</a>
     };
 
     await transporter.sendMail(mailOptions);
